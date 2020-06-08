@@ -1,23 +1,19 @@
-/**
- * Класс Sidebar отвечает за работу боковой колонки:
- * кнопки скрытия/показа колонки в мобильной версии сайта
- * и за кнопки меню
- * */
 class Sidebar {
-  /**
-   * Запускает initAuthLinks и initToggleButton
-   * */
+
   static init() {
     this.initAuthLinks();
     this.initToggleButton();
   }
 
-  /**
-   * Отвечает за скрытие/показа боковой колонки:
-   * переключает два класса для body: sidebar-open и sidebar-collapse
-   * при нажатии на кнопку .sidebar-toggle
-   * */
   static initToggleButton() {
+    const sidebar = document.querySelector(".sidebar-mini");
+    const sidebarToggleButton = document.querySelector(".sidebar-toggle");
+    sidebarToggleButton.addEventListener("click", (evt) => {
+      sidebar.classList.toggle("sidebar-open");
+      sidebar.classList.toggle("sidebar-collapse");
+      evt.preventDefault();
+    })
+    
 
   }
 
@@ -29,7 +25,30 @@ class Sidebar {
    * выходу устанавливает App.setState( 'init' )
    * */
   static initAuthLinks() {
+    const loginButton = document.querySelector('.menu-item_login');
+    loginButton.addEventListener('click', ()=>{
+      const loginModal = new Modal(App.getModal('login').element);
+      loginModal.open();
+    })
+ 
+  const registerButton = document.querySelector('.menu-item_register');
+  registerButton.addEventListener('click', ()=>{
+    const registerModal = new Modal(App.getModal('register').element);
+    registerModal.open();
+  })
 
-  }
+  const logoutButton = document.querySelector('.menu-item_logout');
+  logoutButton.addEventListener('click', ()=>{
+    User.logout(User.current(), (err, response) => { 
+      if(response.success === true) {
+        User.unsetCurrent();
+        App.setState('init');
+      } else {
+        console.log("Ошибка. Повторите выход")
+      };
+    });
+
+  })
+}
 
 }

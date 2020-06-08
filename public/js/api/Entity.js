@@ -1,41 +1,67 @@
-/**
- * Класс Entity - базовый для взаимодействия с сервером.
- * Имеет свойство URL, равно пустой строке.
- * */
 class Entity {
 
-  /**
-   * Запрашивает с сервера список данных.
-   * Это могут быть счета или доходы/расходы
-   * (в зависимости от того, что наследуется от Entity)
-   * */
-  static list( data, callback = f => f ) {
+  static url = "";
+
+  static list(data, callback = (err, response) => { 
+    console.log(err);
+    console.log(response);
+  }
+  ) {
+    const options = {
+      data: data,
+      url: this.url,
+      method: "GET",
+      callback: callback
+    }
+    createRequest(options);
+  }
+
+
+  static create
+    (data, callback = (err, response) => { 
+    console.log(err);
+    console.log(response);
+  }) {
+      const modifiedData = Object.assign({ _method: 'PUT' }, data);
+      const options = {
+      data: modifiedData,
+      url: this.url,
+      callback: callback
+    }
+
+    createRequest(options);
 
   }
 
-  /**
-   * Создаёт счёт или доход/расход с помощью запроса
-   * на сервер. (в зависимости от того,
-   * что наследуется от Entity)
-   * */
-  static create( data, callback = f => f ) {
 
+  static get(id, data, callback = (err, response) => {
+  }) {
+    const options = {
+      data: data,
+      url: this.url,
+      id: id,
+      method: "GET",
+      callback: callback
+    }
+
+    createRequest(options);
   }
 
-  /**
-   * Получает информацию о счёте или доходе/расходе
-   * (в зависимости от того, что наследуется от Entity)
-   * */
-  static get( id = '', data, callback = f => f ) {
 
+  static remove(id, data, callback = (err, response) => { 
+    console.log(err);
+    console.log(response);
+  }) {
+    const modifiedData = Object.assign({ _method: 'DELETE', id: id}, data);
+    const options = {
+      data: modifiedData,
+      url: this.url,
+      id: id,
+      callback: callback
+    }
+
+    createRequest(options);
   }
-
-  /**
-   * Удаляет информацию о счёте или доходе/расходе
-   * (в зависимости от того, что наследуется от Entity)
-   * */
-  static remove( id = '', data, callback = f => f ) {
-
-  }
+  
 }
 

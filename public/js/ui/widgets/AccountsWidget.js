@@ -1,82 +1,92 @@
-/**
- * Класс AccountsWidget управляет блоком
- * отображения счетов в боковой колонке
- * */
+
 class AccountsWidget {
-  /**
-   * Устанавливает текущий элемент в свойство element
-   * Регистрирует обработчики событий с помощью
-   * AccountsWidget.registerEvents()
-   * Вызывает AccountsWidget.update() для получения
-   * списка счетов и последующего отображения
-   * Если переданный элемент не существует,
-   * необходимо выкинуть ошибку.
-   * */
+
   constructor( element ) {
-
+    if(element) {
+      this.element = element;
+      this.update();      
+      this.registerEvents();
+  } else {
+    console.log("элемент не найден");
   }
+}
 
-  /**
-   * При нажатии на .create-account открывает окно
-   * #modal-new-account для создания нового счёта
-   * При нажатии на один из существующих счетов
-   * (которые отображены в боковой колонке),
-   * вызывает AccountsWidget.onSelectAccount()
-   * */
+
   registerEvents() {
+    const createAccountButton = document.querySelector(".create-account");
+    createAccountButton.addEventListener("click", (evt) => {
+      const createAccountModal = new Modal(App.getModal("createAccount").element);
+      createAccountModal.open();
+    })
+
+    const widget = this.element;
+    widget.addEventListener("click", (evt) => {
+      let target = evt.target;
+      if (target.tagName === "A" || target.tagName === "SPAN") {
+        this.onSelectAccount(target);
+      }
+    })
 
   }
 
-  /**
-   * Метод доступен только авторизованным пользователям
-   * (User.current()).
-   * Если пользователь авторизован, необходимо
-   * получить список счетов через Account.list(). При
-   * успешном ответе необходимо очистить список ранее
-   * отображённых счетов через AccountsWidget.clear().
-   * Отображает список полученных счетов с помощью
-   * метода renderItem()
-   * */
+
   update() {
-
+    if(User.current()) {
+      Account.list(User.current(), (err, response)=>{
+        if(response.success) {
+          const accountsArray = response.data;        
+          this.clear();
+          for(let account of accountsArray) {
+            this.renderItem(account);            
+          }
+        
+          
+        } else {
+          console.log("не удалось загрузить список счетов")
+        }
+      });
+    }
   }
 
-  /**
-   * Очищает список ранее отображённых счетов.
-   * Для этого необходимо удалять все элементы .account
-   * в боковой колонке
-   * */
+
   clear() {
+    const accounts = Array.from(this.element.querySelectorAll(".account"));
+    for(let account of accounts) {
+      account.remove();
+    }
 
   }
 
-  /**
-   * Срабатывает в момент выбора счёта
-   * Устанавливает текущему выбранному элементу счёта
-   * класс .active. Удаляет ранее выбранному элементу
-   * счёта класс .active.
-   * Вызывает App.showPage( 'transactions', { account_id: id_счёта });
-   * */
-  onSelectAccount( element ) {
 
-  }
+   onSelectAccount(element) {
+     const accountItem = element.closest("li");
+     const activeItems = Array.from(document.querySelectorAll(".active"));
+     for(let activeItem of activeItems) {
+       activeItem.classList.remove("active");
+     }
+     accountItem.classList.add("active");
+     const options = {};
+     options.account_id = accountItem.dataset.id;
+     App.showPage('transactions', options);
+    }
+  
 
-  /**
-   * Возвращает HTML-код счёта для последующего
-   * отображения в боковой колонке.
-   * item - объект с данными о счёте
-   * */
+
   getAccountHTML( item ) {
-
+    const accountHTML = `
+    <li class="account" data-id="${item.id}">
+      <a href="#">
+          <span>${item.name}</span> /
+          <span>${item.sum} ₽</span>
+      </a>
+    </li>
+    `
+    return accountHTML;
   }
 
-  /**
-   * Получает массив с информацией о счетах.
-   * Отображает полученный с помощью метода
-   * AccountsWidget.getAccountHTML HTML-код элемента
-   * и добавляет его внутрь элемента виджета
-   * */
+
   renderItem( item ) {
+    this.element.insertAdjacentHTML('beforeend', this.getAccountHTML(item));
 
   }
 }
