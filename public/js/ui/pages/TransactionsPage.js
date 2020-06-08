@@ -57,6 +57,7 @@ removeAccount() {
         Account.remove(this.lastOption.account_id, User.current(), (err, response) => {
          if(response.success) {
             this.clear();  
+            App.update();
           }
         })
       } else {
