@@ -21,7 +21,7 @@ class AccountsWidget {
         this.onSelectAccount(target.closest(".account"));
 
       } else if (target.closest(".create-account")) {
-        const createAccountModal = App.getModal("createAccount").open();
+        App.getModal("createAccount").open();
       }
     }
     )
