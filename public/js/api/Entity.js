@@ -2,10 +2,7 @@ class Entity {
 
   static url = "";
 
-  static list(data, callback = (err, response) => { 
-    console.log(err);
-    console.log(response);
-  }
+  static list(data = {}, callback = (err, response) => {}
   ) {
     const options = {
       data: data,
@@ -18,9 +15,7 @@ class Entity {
 
 
   static create
-    (data, callback = (err, response) => { 
-    console.log(err);
-    console.log(response);
+    (data, callback = (err, response) => {
   }) {
       const modifiedData = Object.assign({ _method: 'PUT' }, data);
       const options = {
@@ -48,9 +43,7 @@ class Entity {
   }
 
 
-  static remove(id, data, callback = (err, response) => { 
-    console.log(err);
-    console.log(response);
+  static remove(id, data, callback = () => {
   }) {
     const modifiedData = Object.assign({ _method: 'DELETE', id: id}, data);
     const options = {

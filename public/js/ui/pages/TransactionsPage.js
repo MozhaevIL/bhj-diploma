@@ -1,19 +1,18 @@
-
 class TransactionsPage {
   constructor(element) {
-    if(element) {
-      this.element = element; 
-      this.registerEvents();
-      this.lastOption;
-  } else {
-    console.log("элемент не найден");
+  if (!element) {
+    throw new Error("Элемент не найден");
   }
+
+  this.element = element; 
+  this.registerEvents();
 }
 
+  static lastOption = "";
 
   update() {
-    if(this.lastOption) {
-      this.render(this.lastOption);
+    if(TransactionsPage.lastOption) {
+      this.render(TransactionsPage.lastOption);
     }
   }
 
@@ -24,22 +23,17 @@ class TransactionsPage {
    * TransactionsPage.removeAccount соответственно
    * */
   registerEvents() {
-    const removeAccountButton = this.element.querySelector("button.remove-account");
-    removeAccountButton.addEventListener("click", (evt) => {
-      this.removeAccount();
-    }
-    )
 
      this.element.addEventListener("click", (evt) => {
-      let target = evt.target;
+      const target = evt.target;
       const button = target.closest("button");
       if(button && button.classList.contains("transaction__remove")) {
         const id = button.dataset.id;
         this.removeTransaction(id);
+      } else if(button && button.classList.contains("remove-account")) {
+        this.removeAccount();
       }
     })
-
-
   }
 
   /**
@@ -51,24 +45,23 @@ class TransactionsPage {
    * для обновления приложения
    * */
 removeAccount() {
-    if(this.lastOption) {
-      const removeAccountConfirm = confirm("Вы действительно хотите удалить текущий счет?");
-      if(removeAccountConfirm) {
-        Account.remove(this.lastOption.account_id, User.current(), (err, response) => {
-         if(response.success) {
-            this.clear();  
-            App.update();
-          }
-        })
-      } else {
-        console.log("Отмена")
-      }
-      
-    }  
-  }
-
-
-
+    if(!this.lastOption) {
+      return;
+    }
+    const removeAccountConfirm = confirm("Вы действительно хотите удалить текущий счет?");
+    if(!removeAccountConfirm) {
+      return;
+    }
+    Account.remove(this.lastOption.account_id, User.current(), (err, response) => {
+      if(response && response.success) {
+         this.clear();  
+         App.update();
+       } else {
+         alert(err);
+       }
+     })
+}
+  
 
   /**
    * Удаляет транзакцию (доход или расход). Требует
@@ -79,13 +72,11 @@ removeAccount() {
     const removeTransactionConfirm = confirm("Вы действительно хотите удалить эту транзакцию?");
     if(removeTransactionConfirm) {
       Transaction.remove(id, User.current(), (err, response) => {
-       if(response.success) {
+       if(response && response.success) {
           App.update();
         }
       })
-    } else {
-      console.log("Отмена")
-    }
+    } 
   }
 
   /**
@@ -96,7 +87,7 @@ removeAccount() {
    * */
   render(options) {
     this.lastOption = options;
-    Account.get(options.account_Id, User.current(), (err, response)=>{
+    Account.get(options.account_id, {}, (err, response)=>{
       const accountsData = response.data;
       for(let account of accountsData) {
         if(account.id === options.account_id) {
@@ -164,7 +155,7 @@ removeAccount() {
 
 
   getTransactionHTML( item ) {
-    const transactionHTML = `
+    return `
       <div class="transaction transaction_${item.type.toLowerCase()} row">
       <div class="col-md-7 transaction__details">
         <div class="transaction__icon">
@@ -187,7 +178,6 @@ removeAccount() {
       </div>
   </div>
     `;
-    return transactionHTML;
   }
 
 

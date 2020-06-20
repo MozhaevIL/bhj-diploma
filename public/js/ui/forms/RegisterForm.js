@@ -5,7 +5,7 @@ class RegisterForm extends AsyncForm {
     User.register(options, (err, response) => { 
      console.log(err);
      console.log(response);
-     if(response.success === true) {
+     if(response && response.success === true) {
        User.setCurrent(response);
        App.setState( 'user-logged');
        this.element.reset();

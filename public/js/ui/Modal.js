@@ -2,21 +2,22 @@
 class Modal {
 
   constructor(element) {
-    if(element) {
-      this.element = element;
-      this.registerEvents();
-  } else {
-    console.log("элемент не найден");
-  }
+    if (!element) {
+      throw new Error("Элемент не найден");
+    }
+   
+    this.element = element;
+    this.registerEvents();
+  
 }
 
 
   registerEvents() {
     const elmClose = this.element.querySelectorAll('[data-dismiss="modal"]');
     for(let elm of elmClose) {
-      elm.addEventListener("click", (evt) => {
+      elm.addEventListener("click", (event) => {
+        event.preventDefault();
         this.onClose();
-        evt.preventDefault();
       })
     }
   }
@@ -29,9 +30,9 @@ class Modal {
   unregisterEvents() {
     const elmClose = this.element.querySelectorAll('[data-dismiss="modal"]');
     for(let elm of elmClose) {
-      elm.removeEventListener("click", (evt) => {
+      elm.removeEventListener("click", (event) => {
+        event.preventDefault();
         this.onClose();
-        evt.preventDefault();
       })
     }
   }

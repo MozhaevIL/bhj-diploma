@@ -1,12 +1,13 @@
 class TransactionsWidget {
 
   constructor(element) {
-    if(element) {
-      this.element = element; 
-      this.registerEvents();
-  } else {
-    console.log("элемент не найден");
-  }
+    if (!element) {
+      throw new Error("Элемент не найден");
+    }
+  
+    this.element = element; 
+    this.registerEvents();
+  
 }
 
   registerEvents() {

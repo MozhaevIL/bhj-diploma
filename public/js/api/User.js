@@ -4,8 +4,7 @@ class User {
   static url = "/user";
 
   static setCurrent(user) {
-    const userJson = JSON.stringify(user);
-    localStorage.setItem("user", userJson);
+    localStorage.setItem("user", JSON.stringify(user));
   }
 
 
@@ -15,16 +14,11 @@ class User {
 
 
   static current() {
-    localStorage.getItem("user");
-    const user = JSON.parse(localStorage.getItem("user"));
-    return user;
+    return JSON.parse(localStorage.getItem("user"));
   }
 
 
-  static fetch(data, callback = (err, response) => { //доработать
-    console.log(err);
-    console.log(response);
-    }
+  static fetch(data, callback = (err, response) => {}
     ) {
       if(data) {
         const options = {
@@ -34,22 +28,12 @@ class User {
           callback: callback
         }
         createRequest(options);
-      } else {
-        console.log('Авторизованный пользователь не найден');
-      }
+      } 
  }
 
 
 
-  static login( data, callback = (err, response) => { 
-    console.log(err);
-    console.log(response);
-    if(response.success === true) {
-      this.setCurrent(response);
-    } else {
-      alert(`Ошибка авторизации.\n${response.error}`)
-    }
-    }
+  static login( data, callback = (err, response) => {}
     ) {
       const options = {
         data: data,
@@ -61,15 +45,7 @@ class User {
     }
 
 
-  static register( data, callback = (err, response) => { 
-    console.log(err);
-    console.log(response);
-    if(response.success === true) {
-      this.setCurrent(response);
-    } else {
-      alert(`Ошибка регистрации.\n${response.error.email}`)
-    }
-    }
+  static register( data, callback = (err, response) => {}
     ) {
       const options = {
         data: data,
@@ -81,15 +57,7 @@ class User {
     }
 
 
-  static logout(data, callback = (err, response) => { 
-    console.log(err);
-    console.log(response);
-    if(response.success === true) {
-      this.unsetCurrent();
-    } else {
-      console.log("Ошибка выхода. Попробуйте снова")
-    }
-  }
+  static logout(data, callback = (err, response) => {}
   ) {
     const options = {
     data: data,

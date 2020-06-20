@@ -8,10 +8,11 @@ class Sidebar {
   static initToggleButton() {
     const sidebar = document.querySelector(".sidebar-mini");
     const sidebarToggleButton = document.querySelector(".sidebar-toggle");
-    sidebarToggleButton.addEventListener("click", (evt) => {
+    sidebarToggleButton.addEventListener("click", (event) => {
+      
+      event.preventDefault();
       sidebar.classList.toggle("sidebar-open");
       sidebar.classList.toggle("sidebar-collapse");
-      evt.preventDefault();
     })
     
 
@@ -27,26 +28,23 @@ class Sidebar {
   static initAuthLinks() {
     const loginButton = document.querySelector('.menu-item_login');
     loginButton.addEventListener('click', ()=>{
-      const loginModal = new Modal(App.getModal('login').element);
-      loginModal.open();
+      App.getModal('login').open();
     })
  
   const registerButton = document.querySelector('.menu-item_register');
   registerButton.addEventListener('click', ()=>{
-    const registerModal = new Modal(App.getModal('register').element);
-    registerModal.open();
+    App.getModal('register').open();
   })
 
   const logoutButton = document.querySelector('.menu-item_logout');
   logoutButton.addEventListener('click', ()=>{
-    User.logout(User.current(), (err, response) => { 
-      if(response.success === true) {
+    User.logout({}, (err, response) => { 
+      if(response && response.success) {
         User.unsetCurrent();
         App.setState('init');
-      } else {
-        console.log("Ошибка. Повторите выход")
-      };
-    });
+        TransactionsPage.lastOption = null;
+      }
+    })
 
   })
 }

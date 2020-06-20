@@ -1,20 +1,20 @@
 class AsyncForm {
 
-  constructor( element ) {
-      if(element) {
-        this.element = element;
-        this.registerEvents();
-    } else {
-      console.log("элемент не найден");
+  constructor(element) {
+    if (!element) {
+      throw new Error("Элемент не найден");
     }
+  
+    this.element = element; 
+    this.registerEvents();
   }
   
 
 
 
   registerEvents() {
-    this.element.addEventListener('submit', (evt)=> {
-      evt.preventDefault();
+    this.element.addEventListener('submit', (event)=> {
+      event.preventDefault();
       this.submit();
     })
   }
@@ -30,7 +30,6 @@ class AsyncForm {
       value = item[ 1 ];
       data[key] = value;
     }
-    console.log(data);
     return data;
   }
 

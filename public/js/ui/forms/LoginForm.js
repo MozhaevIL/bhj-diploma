@@ -3,9 +3,8 @@ class LoginForm extends AsyncForm {
 
   onSubmit(options) {
      User.login(options, (err, response) => { 
-      console.log(err);
-      console.log(response);
-      if(response.success === true) {
+
+      if(response && response.success === true) {
         User.setCurrent(response);
         App.setState( 'user-logged');
         this.element.reset();
@@ -16,11 +15,5 @@ class LoginForm extends AsyncForm {
         alert(`Ошибка авторизации.\n${response.error}`);
       }
       })
-
-  
-
-
-      
-   
   }
 }
