@@ -42,7 +42,7 @@ class Sidebar {
       if(response && response.success) {
         User.unsetCurrent();
         App.setState('init');
-        TransactionsPage.lastOption = null;
+        TransactionsPage.lastOption = "";
       }
     })
 

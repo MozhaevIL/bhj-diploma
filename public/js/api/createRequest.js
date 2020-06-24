@@ -1,27 +1,23 @@
 const createRequest = (options = {}) => {
     let xhr = new XMLHttpRequest;
     
-    let data;
-    if (options.data) {
-        data = options.data;
-    } else {
-        data = {};
-    }
+    let data = options.data || {}; 
+    let url = options.url;
+    let formData, method;   
 
     xhr.withCredentials = true;    
     xhr.responseType = "json";
-
-
-   
+ 
     const dataKeys = Object.keys(data);
     const dataValues = Object.values(data);
 
-   
+
 
 
     if(options.method === "GET") {
+        method = "GET";
         let requestString;
-        if(data) {
+        if(dataKeys.length > 0) {
             requestString = `?${dataKeys[0]}=${dataValues[0]}`
             for(let i=1; i < dataKeys.length-1; i++) {
                 requestString+= `&${dataKeys[i]}=${dataValues[i]}`
@@ -29,24 +25,22 @@ const createRequest = (options = {}) => {
         } else {
             requestString = "";
         }
-        xhr.open("GET", `${options.url}${requestString}`);
-        xhr.send();
+        
+        url += requestString;
 
 
 
     } else {
-        let formData = new FormData();
+        method = 'POST';
+        formData = new FormData();
             for(let i=0; i < dataKeys.length; i++) {
                 formData.append(dataKeys[i], dataValues[i]);
             
         }
-
-        for (var value of formData.values()) {
-         }
-
-        xhr.open(`POST`, `${options.url}`);
-        xhr.send(formData);
     }
+
+    xhr.open(method, url);
+    xhr.send(formData);
 
     xhr.addEventListener('load', () => {
         let err = xhr.statusText;

@@ -5,12 +5,11 @@ class RegisterForm extends AsyncForm {
     User.register(options, (err, response) => { 
      console.log(err);
      console.log(response);
-     if(response && response.success === true) {
+     if(response && response.success) {
        User.setCurrent(response);
        App.setState( 'user-logged');
        this.element.reset();
-       const registerModal = new Modal(App.getModal('register').element);
-       registerModal.close();
+       App.getModal('register').close();
 
      } else {
        alert(`Ошибка регистрации.\n${response.error.email}`);

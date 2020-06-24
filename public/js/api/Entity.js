@@ -33,8 +33,7 @@ class Entity {
   }) {
     const options = {
       data: data,
-      url: this.url,
-      id: id,
+      url: `${this.url}/${id}`,
       method: "GET",
       callback: callback
     }

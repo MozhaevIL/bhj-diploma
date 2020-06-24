@@ -13,7 +13,7 @@ class TransactionsPage {
   update() {
     if(TransactionsPage.lastOption) {
       this.render(TransactionsPage.lastOption);
-    }
+    } 
   }
 
   /**
@@ -52,7 +52,7 @@ removeAccount() {
     if(!removeAccountConfirm) {
       return;
     }
-    Account.remove(this.lastOption.account_id, User.current(), (err, response) => {
+    Account.remove(this.lastOption.account_id, {}, (err, response) => {
       if(response && response.success) {
          this.clear();  
          App.update();
@@ -71,9 +71,9 @@ removeAccount() {
   removeTransaction( id ) {
     const removeTransactionConfirm = confirm("Вы действительно хотите удалить эту транзакцию?");
     if(removeTransactionConfirm) {
-      Transaction.remove(id, User.current(), (err, response) => {
+      Transaction.remove(id, {}, (err, response) => {
        if(response && response.success) {
-          App.update();
+        App.update();
         }
       })
     } 
@@ -86,15 +86,9 @@ removeAccount() {
    * в TransactionsPage.renderTransactions()
    * */
   render(options) {
-    this.lastOption = options;
-    Account.get(options.account_id, {}, (err, response)=>{
-      const accountsData = response.data;
-      for(let account of accountsData) {
-        if(account.id === options.account_id) {
-          this.renderTitle(account.name);
-          break;
-        }
-      }
+    TransactionsPage.lastOption = options;
+    Account.get(options.account_id, User.current(), (err, response)=>{
+      this.renderTitle(response.data.name);
     })
     
     Transaction.list(options, (err, response) => {

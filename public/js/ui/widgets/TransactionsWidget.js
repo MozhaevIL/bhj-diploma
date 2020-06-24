@@ -13,14 +13,12 @@ class TransactionsWidget {
   registerEvents() {
     const income = this.element.querySelector(".create-income-button");
     income.addEventListener("click", () =>{
-      const incomeModal = new Modal(App.getModal('newIncome').element);
-      incomeModal.open();
+      App.getModal('newIncome').open();
     })
 
     const expense = this.element.querySelector(".create-expense-button");
     expense.addEventListener("click", () =>{
-      const expenseModal = new Modal(App.getModal('newExpense').element);
-      expenseModal.open();
+      App.getModal('newExpense').open();
     })
   }
 }

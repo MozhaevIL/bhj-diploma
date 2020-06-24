@@ -13,8 +13,10 @@ class UserWidget {
 
   update() {
     const userName = this.element.querySelector('.user-name');
-    if(localStorage.getItem("user")) {
-      userName.textContent = User.current().user.name;
+    const currentUser = User.current();
+
+    if(currentUser) {
+      userName.textContent = currentUser.name;
     }
   }
 }

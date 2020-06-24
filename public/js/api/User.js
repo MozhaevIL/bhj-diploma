@@ -14,8 +14,10 @@ class User {
 
 
   static current() {
-    return JSON.parse(localStorage.getItem("user"));
-  }
+    if(localStorage.getItem("user")) {
+      return JSON.parse(localStorage.getItem("user")).user;
+  } 
+}
 
 
   static fetch(data, callback = (err, response) => {}
